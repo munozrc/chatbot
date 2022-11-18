@@ -10,6 +10,7 @@
 }
 
 .container {
+  position: relative;
   max-width: 100%;
   border-radius: 20px;
   padding: 8px 14px;
@@ -20,9 +21,20 @@
 .bgInput {
   background: rgb(0, 102, 255);
   color: rgb(255, 255, 255);
+  border-bottom-right-radius: 4px;
 }
 
 .bgResponse {
   background: rgb(255, 255, 255);
   color: rgb(0, 0, 0);
+  border-top-left-radius: 4px;
 }
+
+/* .container.bgInput::before {
+  content: 'Tú';
+  position: absolute;
+  top: -25px;
+  right: 0;
+  color: #121212;
+  font-size: 0.85rem;
+} */

@@ -30,6 +30,12 @@
   border: 1px solid;
   border-radius: 16px;
   padding: 0px 16px;
+  transition: opacity 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.optionsContainer>button:hover {
+  opacity: 0.7;
 }
 
 .optionsContainer>button:last-child {
