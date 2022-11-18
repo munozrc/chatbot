@@ -1,7 +1,7 @@
 export default [
   {
     intent: 'saludo',
-    pattern: /hola/i,
+    pattern: /hola|buen([oa]s)*\s(dia|tarde|noche)s*|que\s*tal/i,
     message: '¡Hola! Encantado de conocerte.',
     trigger: 'show-menu'
   },
