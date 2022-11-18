@@ -1,0 +1,28 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 25px 10px;
+}
+
+.wrapperFlexEnd {
+  align-items: flex-end;
+}
+
+.container {
+  max-width: 100%;
+  border-radius: 20px;
+  padding: 8px 14px;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.bgInput {
+  background: rgb(0, 102, 255);
+  color: rgb(255, 255, 255);
+}
+
+.bgResponse {
+  background: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+}
