@@ -8,8 +8,11 @@ import patterns from './patterns'
 export function matchPattern (message) {
   const dictionary = Object.entries(patterns)
 
-  for (const [intent, { regex, ...restOfValues }] of dictionary) {
-    if (regex.test(message)) return { intent, ...restOfValues }
+  for (const [intent, { regex, requests, response }] of dictionary) {
+    if (regex.test(message)) {
+      const textReponse = typeof response === 'function' ? response(message) : response
+      return { intent, response: textReponse, requests }
+    }
   }
 
   return {
