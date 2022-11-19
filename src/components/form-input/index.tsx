@@ -12,7 +12,11 @@ export function FormInput ({ onSubmitMessage }: FormInputProps) {
 
   function handleSubmit (event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    message && onSubmitMessage(message)
+
+    if (!message) return
+
+    onSubmitMessage(message)
+    setMessage('')
   }
 
   return (
