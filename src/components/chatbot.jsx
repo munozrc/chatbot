@@ -1,20 +1,20 @@
 import { useState } from 'react'
-import { RobotIcon, SendIcon } from '../icons'
+import { RobotIcon } from '../icons'
 import Content from './content'
 import Message from './message'
 import intents from '../intents'
 
 import styles from '../styles/chatbot.module.css'
+import Footer from './footer'
+import { matchPattern } from '../helpers'
 
 export default function Chatbot () {
   const [bufferedContent, setBufferedContent] = useState('')
   const [possibleOptions, setPossibleOptions] = useState([])
-  const [inputText, setInputText] = useState('')
 
   function processInputMessage (text) {
     if (!text) return
 
-    setInputText('')
     setBufferedContent((prev) => (
       <>
         {prev}
@@ -23,7 +23,7 @@ export default function Chatbot () {
     ))
 
     const intent = intents.find(intent => intent.pattern?.test(text))
-    const response = intent?.message ?? 'Creo que no entiendo tu pregunta. Intenta reformularla, por favor.'
+    const response = intent?.message ?? 'Creo que no entiendo tu pregunta. Intenta reformularla.'
 
     setPossibleOptions(intent?.options ?? [])
     setBufferedContent((prev) => (
@@ -46,9 +46,34 @@ export default function Chatbot () {
     }
   }
 
-  function handleSubmit (event) {
-    event.preventDefault()
-    inputText && processInputMessage(inputText)
+  function proccesMessage (inputMessage) {
+    setBufferedContent((prev) => (
+      <>
+        {prev}
+        <Message flexEnd>{inputMessage}</Message>
+      </>
+    ))
+
+    try {
+      const { message, options } = matchPattern(inputMessage)
+      setPossibleOptions(options ?? [])
+      setBufferedContent((prev) => (
+        <>
+          {prev}
+          <Message>{message}</Message>
+        </>
+      ))
+    } catch (error) {
+      setBufferedContent((prev) => (
+        <>
+          {prev}
+          <Message>
+            <p>Creo que no entiendo tu pregunta.</p>
+            <p>Intenta reformularla.</p>
+          </Message>
+        </>
+      ))
+    }
   }
 
   return (
@@ -69,22 +94,7 @@ export default function Chatbot () {
             possibleOptions={possibleOptions}
             onClickOption={processInputMessage}
           />
-          <footer className={styles.footer}>
-            <form onSubmit={handleSubmit}>
-              <input
-                name="message"
-                placeholder="Escribe tu mensaje aquí"
-                autoComplete="off"
-                className={styles.inputMessage}
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-              />
-              <button className={styles.sendButton}>
-                <SendIcon size="26px" color={!inputText ? '#D7D7D7' : '#4994FF'} />
-              </button>
-            </form>
-            <p>by <a href='https://github.com/munozrc'>@munozrc</a></p>
-          </footer>
+          <Footer onSubmit={proccesMessage} />
         </div>
       </section>
     </div>
