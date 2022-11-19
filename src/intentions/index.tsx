@@ -1,7 +1,9 @@
 import { gretting } from './greeting'
 import { defaultIntention } from './default'
 
-export default [
+const allIntentions = [
   gretting,
   defaultIntention
 ]
+
+export default allIntentions
