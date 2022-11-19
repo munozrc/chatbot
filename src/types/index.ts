@@ -7,11 +7,12 @@ export interface EntityObject {
   [key: string]: any
 }
 
-export interface Intention {
+export interface Intent {
   name: string
-  validator: (inputText: string) => boolean
   messageAsText?: string
   quickReplies?: Array<string>
   entities?: Array<Entity>
+  trigger?: string
+  validator: (inputText: string) => boolean
   action?: (entityList?: EntityObject) => void
 }

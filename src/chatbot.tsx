@@ -2,8 +2,9 @@ import { ChatHeader, FormInput, Message, MessageList } from '@/components'
 import { useContext } from 'react'
 import { ChatbotContext } from './context/chatbot-context'
 
-import allIntentions from './intentions'
-import { defaultIntention } from './intentions/default'
+import { defaultIntent } from './intents/default'
+import allIntents from './intents'
+
 import styles from './styles/chatbot.module.css'
 
 export default function ChatBot () {
@@ -11,9 +12,16 @@ export default function ChatBot () {
 
   const proccesMessage = (text: string) => {
     addMessage(<Message emitter='user'>{text}</Message>)
-    const intention = allIntentions.find((obj) => obj.validator(text))
-    const message = intention?.messageAsText ?? defaultIntention.messageAsText
+    const intent = allIntents.find((obj) => obj.validator(text))
+    const message = intent?.messageAsText ?? defaultIntent.messageAsText
+    const trigger = intent?.trigger
     addMessage(<Message emitter='bot'>{message}</Message>)
+
+    if (!trigger) return
+    const secondIntent = allIntents.find((obj) => obj.name === trigger)
+
+    if (!secondIntent) return
+    addMessage(<Message emitter='bot'>{secondIntent.messageAsText}</Message>)
   }
 
   return (

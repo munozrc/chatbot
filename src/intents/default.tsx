@@ -1,6 +1,6 @@
-import { Intention } from '@/types'
+import { Intent } from '@/types'
 
-export const defaultIntention: Intention = {
+export const defaultIntent: Intent = {
   name: 'default',
   validator: () => false,
   messageAsText: 'Creo que no entiendo tu pregunta. Intenta reformularla. por favor'
