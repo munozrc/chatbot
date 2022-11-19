@@ -12,12 +12,13 @@ export function MessageList ({ listReplies, messageHistory, onClickQuickReply }:
 
   useEffect(() => {
     const content = wrapperElement.current
-    content?.addEventListener('DOMNodeInserted', handleScroll, true)
-    return () => content?.removeEventListener('DOMNodeInserted', handleScroll, true)
+    content?.addEventListener('DOMNodeInserted', handleScroll)
+    return () => content?.removeEventListener('DOMNodeInserted', handleScroll)
   }, [])
 
   function handleScroll (event: Event): void {
     const target = event.currentTarget as Element
+    console.log(target.scrollHeight)
     target.scroll({ top: target.scrollHeight, behavior: 'smooth' })
   }
 
