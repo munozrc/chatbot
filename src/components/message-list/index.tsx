@@ -18,7 +18,6 @@ export function MessageList ({ listReplies, messageHistory, onClickQuickReply }:
 
   function handleScroll (event: Event): void {
     const target = event.currentTarget as Element
-    console.log(target.scrollHeight)
     target.scroll({ top: target.scrollHeight, behavior: 'smooth' })
   }
 
