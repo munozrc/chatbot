@@ -1,9 +1,9 @@
-import { useRef, useEffect, MouseEvent } from 'react'
+import { useRef, useEffect, MouseEvent, ReactNode } from 'react'
 import styles from './styles.module.css'
 
 interface MessageListProps {
   listReplies: Array<string>
-  messageHistory: string
+  messageHistory: ReactNode
   onClickQuickReply: (reply: string) => void
 }
 
