@@ -76,6 +76,7 @@
   outline: none;
   background: transparent;
   margin-right: 20px;
+  cursor: pointer;
 }
 
 .inputMessage {

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { RobotIcon, SendIcon } from '../icons'
 import Content from './content'
 import Message from './message'
@@ -9,14 +9,12 @@ import styles from '../styles/chatbot.module.css'
 export default function Chatbot () {
   const [bufferedContent, setBufferedContent] = useState('')
   const [possibleOptions, setPossibleOptions] = useState([])
-
-  const inputElement = useRef(null)
+  const [inputText, setInputText] = useState('')
 
   function processInputMessage (text) {
     if (!text) return
 
-    inputElement.current.value = ''
-
+    setInputText('')
     setBufferedContent((prev) => (
       <>
         {prev}
@@ -50,8 +48,7 @@ export default function Chatbot () {
 
   function handleSubmit (event) {
     event.preventDefault()
-    const message = inputElement.current.value
-    message && processInputMessage(message)
+    inputText && processInputMessage(inputText)
   }
 
   return (
@@ -78,11 +75,12 @@ export default function Chatbot () {
                 name="message"
                 placeholder="Escribe tu mensaje aquí"
                 autoComplete="off"
-                ref={inputElement}
                 className={styles.inputMessage}
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
               />
               <button className={styles.sendButton}>
-                <SendIcon size="26px" color="#D7D7D7"/>
+                <SendIcon size="26px" color={!inputText ? '#D7D7D7' : '#4994FF'} />
               </button>
             </form>
             <p>by <a href='https://github.com/munozrc'>@munozrc</a></p>
