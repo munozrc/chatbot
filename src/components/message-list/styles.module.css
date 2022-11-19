@@ -3,12 +3,12 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #E9E9E9;
+  background-color: #ECECEC;
   overflow-y: scroll;
-  padding-top: 25px;
+  padding-top: 10px;
 }
 
-.optionsContainer {
+.repliesContainer {
   width: 100%;
   display: flex;
   justify-content: center;
@@ -16,7 +16,7 @@
   padding: 0px 8px;
 }
 
-.optionsContainer>button {
+.repliesContainer>button {
   border-color: rgb(0, 102, 255);
   color: rgb(0, 102, 255);
   background: rgb(255, 255, 255);
@@ -34,10 +34,10 @@
   cursor: pointer;
 }
 
-.optionsContainer>button:hover {
+.repliesContainer>button:hover {
   opacity: 0.7;
 }
 
-.optionsContainer>button:last-child {
+.repliesContainer>button:last-child {
   margin-bottom: 16px;
 }

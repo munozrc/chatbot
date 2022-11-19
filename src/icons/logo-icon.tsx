@@ -1,4 +1,4 @@
-export function RobotIcon ({ size = '1em', color = 'currentColor' }) {
+export function LogoIcon ({ size = '1em', color = 'currentColor' }) {
   return (
     <svg
       height={size}

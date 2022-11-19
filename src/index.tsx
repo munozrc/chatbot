@@ -2,9 +2,9 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './app'
 
-import './styles/global.css'
+import './styles/index.css'
 
-const rootElement = document.getElementById('root')
+const rootElement = document.getElementById('root') as HTMLElement
 const createRoot = ReactDOM.createRoot(rootElement)
 
 createRoot.render(

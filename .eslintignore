@@ -1,3 +1,9 @@
-dist
-node_modules
-node_modules/*
+node_modules/
+coverage/
+build/
+.idea/
+.vscode/
+.next/
+.now
+.log
+next.config.js
