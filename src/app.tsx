@@ -1,9 +1,12 @@
+import ChatbotProvider from './context/chatbot-context'
 import ChatBot from './chatbot'
 
 export default function App () {
   return (
     <main>
-      <ChatBot />
+      <ChatbotProvider>
+        <ChatBot />
+      </ChatbotProvider>
     </main>
   )
 }
