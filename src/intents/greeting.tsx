@@ -2,7 +2,7 @@ import { Intent } from '@/types'
 
 export const gretting: Intent = {
   name: 'greeting',
-  pattern: /hola|buen([oa]s)*\s(dia|tarde|noche)s*|que\s*tal/i,
+  pattern: /hola|buen(\s|[oa]s*)*(dia|noche|tarde)s*|que\s*tal/i,
   message: '¡Hola! Encantado de conocerte.',
   trigger: 'show-menu'
 }
