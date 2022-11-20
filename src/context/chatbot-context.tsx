@@ -22,7 +22,7 @@ export default function ChatbotProvider ({ children }: ChatbotProviderProps) {
   const [currentEntity, setCurrentEntity] = useState<number>(0)
 
   function getIntentByText (message: string) : Intent | undefined {
-    const intent = allIntents.find((obj) => obj.validator(message))
+    const intent = allIntents.find((obj) => obj.pattern.test(message))
     setListReplies(intent?.quickReplies ?? [])
     setCurrentIntent(intent ?? null)
     return intent
@@ -44,7 +44,7 @@ export default function ChatbotProvider ({ children }: ChatbotProviderProps) {
     const nextPosition = currentEntity + 1
     const isTheLastEntity = entities.length - 1 >= nextPosition
 
-    if (!entity.validator(text)) return addMessage(entity.errorMessage, 'bot')
+    if (!entity.pattern.test(text)) return addMessage(entity.errorMessage, 'bot')
 
     addMessage(entity.message, 'bot')
 

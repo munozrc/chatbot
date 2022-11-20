@@ -1,20 +1,15 @@
 export interface Entity {
   name: string
+  pattern: RegExp
   message: string
-  validator: (inputText: string) => boolean
   errorMessage: string
-}
-
-export interface EntityObject {
-  [key: string]: any
 }
 
 export interface Intent {
   name: string
+  pattern: RegExp
   message: string
   quickReplies?: Array<string>
   entities?: Array<Entity>
   trigger?: string
-  validator: (inputText: string) => boolean
-  action?: (entityList?: EntityObject) => void
 }
