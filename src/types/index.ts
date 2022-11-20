@@ -13,3 +13,9 @@ export interface Intent {
   entities?: Array<Entity>
   trigger?: string
 }
+
+export interface CurrentIntent {
+  intent: Intent
+  entity: number
+  data: { [key: string]: any }
+}
