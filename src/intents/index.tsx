@@ -22,7 +22,8 @@ const allIntents: Array<Intent> = [
         message: 'Escriba la fecha a consultar con el formato MM/AAAA. Ejemplo: 11/2022',
         errorMessage: 'Ingrese una fecha valida por favor.'
       }
-    ]
+    ],
+    action: async ({ identificacion, fecha }) => `Resumen: ID=${identificacion} fecha=${fecha}`
   }
 ]
 

@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useCallback, useState } from 'react'
 import { matchPattern, searchIntentByName } from '@/helpers'
-import { CurrentIntent, Entity, Intent } from '@/types'
+import { CurrentIntent, Entity, Intent, IntentData } from '@/types'
 import { Message } from '@/components'
 
 interface ChatbotContextInterface {
@@ -12,8 +12,6 @@ interface ChatbotContextInterface {
 interface ChatbotProviderProps {
   children: ReactNode
 }
-
-const initValuesCurrentIntent = { data: {}, entity: 0 } as CurrentIntent
 
 export const ChatbotContext = createContext({} as ChatbotContextInterface)
 
@@ -31,20 +29,32 @@ export default function ChatbotProvider ({ children }: ChatbotProviderProps) {
     ))
   }
 
-  const processEntity = useCallback((rawText: string): void => {
-    const { intent, entity: entityPosition, data } = current as CurrentIntent
+  const executionAction = useCallback(async (intent: Intent, data: IntentData) => {
+    if (typeof intent.action !== 'function') return
+    const message = await intent.action(data)
+    addMessage(message, 'bot')
+  }, [])
+
+  const processEntity = useCallback(async (rawText: string): Promise<void> => {
+    const { intent, entity: entityPosition, data: prevData } = current as CurrentIntent
     const entities = intent.entities as Entity[]
     const nextPosition = entityPosition + 1
 
-    const { pattern, errorMessage } = entities.at(entityPosition) as Entity
+    const { pattern, errorMessage, name } = entities.at(entityPosition) as Entity
+    const data = { ...prevData, [name]: rawText }
 
     if (!pattern.test(rawText)) return addMessage(errorMessage, 'bot')
-    if (nextPosition >= entities.length) return setCurrent(null)
 
-    const nextEntity = entities.at(entityPosition) as Entity
+    if (nextPosition >= entities.length) {
+      setCurrent(null)
+      await executionAction(intent, data)
+      return
+    }
+
+    const nextEntity = entities.at(nextPosition) as Entity
     addMessage(nextEntity.message, 'bot')
-    setCurrent({ intent, data, entity: nextPosition })
-  }, [current])
+    setCurrent({ intent, entity: nextPosition, data })
+  }, [current, executionAction])
 
   const proccesIntent = useCallback((intent: Intent) : void => {
     const { message: replyMessage, quickReplies, entities } = intent
@@ -54,23 +64,25 @@ export default function ChatbotProvider ({ children }: ChatbotProviderProps) {
 
     if (!entities) return
 
-    const firstEntity = entities[initValuesCurrentIntent.entity]
-    setCurrent({ ...initValuesCurrentIntent, intent })
+    const firstEntity = entities[0]
+    setCurrent({ data: {}, entity: 0, intent })
     addMessage(firstEntity.message, 'bot')
   }, [])
 
-  const processNewMessage = useCallback((rawText: string): void => {
+  const processNewMessage = useCallback(async (rawText: string): Promise<void> => {
     addMessage(rawText, 'user')
     const isIntentionInProgress = current && current.intent.entities
-    if (isIntentionInProgress) return processEntity(rawText)
+    if (isIntentionInProgress) return await processEntity(rawText)
 
     const matchIntent = matchPattern(rawText)
+    const data = { [matchIntent.name]: rawText }
     proccesIntent(matchIntent)
+    !matchIntent.entities && await executionAction(matchIntent, data)
 
     if (!matchIntent.trigger) return
     const matchNextIntent = searchIntentByName(matchIntent.trigger)
     proccesIntent(matchNextIntent)
-  }, [proccesIntent, processEntity, current])
+  }, [current, proccesIntent, processEntity, executionAction])
 
   return (
     <ChatbotContext.Provider
