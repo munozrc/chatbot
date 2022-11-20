@@ -1,6 +1,8 @@
 export interface Entity {
   name: string
+  message: string
   validator: (inputText: string) => boolean
+  errorMessage: string
 }
 
 export interface EntityObject {
