@@ -9,7 +9,7 @@ export interface EntityObject {
 
 export interface Intent {
   name: string
-  messageAsText?: string
+  message: string
   quickReplies?: Array<string>
   entities?: Array<Entity>
   trigger?: string

@@ -1,10 +1,9 @@
 import { gretting, showMenu } from './greeting'
-import { defaultIntent } from './default'
+export { defaultIntent } from './default'
 
 const allIntents = [
   gretting,
-  showMenu,
-  defaultIntent
+  showMenu
 ]
 
 export default allIntents
