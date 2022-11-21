@@ -3,7 +3,7 @@ import styles from './styles.module.css'
 
 interface MessageProps {
   children: ReactNode
-  emitter: 'user' | 'bot'
+  emitter?: 'user' | 'bot'
 }
 
 export function Message ({ children, emitter = 'bot' }: MessageProps) {

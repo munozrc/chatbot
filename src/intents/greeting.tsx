@@ -1,9 +1,25 @@
+import { Message } from '@/components'
 import { Intent } from '@/types'
+
+const saludos = [
+  'Nos alegramos de que estés aquí',
+  '¡Hola! Encantado de conocerte.',
+  '¡Te estábamos esperando! Queremos ofrecerte una atención rápida y personalizada'
+]
+
+async function GreetingResponse () {
+  return (
+    <>
+      <Message>{saludos[Math.floor(Math.random() * saludos.length)]}</Message>
+      <Message>🙌 Soy tu asistente virtual</Message>
+    </>
+  )
+}
 
 export const greeting: Intent = {
   name: 'greeting',
   pattern: /hola|buen(\s|[oa]s*)*(dia|noche|tarde)s*|que\s*tal/i,
-  message: '¡Hola! Encantado de conocerte.',
+  message: GreetingResponse,
   trigger: 'show-menu'
 }
 

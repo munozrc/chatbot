@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useCallback, useState } from 'react'
+import { CurrentIntent, Entity, Intent, IntentData, MessageType } from '@/types'
 import { matchPattern, searchIntentByName } from '@/helpers'
-import { CurrentIntent, Entity, Intent, IntentData } from '@/types'
 import { Message } from '@/components'
 
 interface ChatbotContextInterface {
@@ -20,19 +20,22 @@ export default function ChatbotProvider ({ children }: ChatbotProviderProps) {
   const [listReplies, setListReplies] = useState<Array<string>>([])
   const [current, setCurrent] = useState<CurrentIntent | null>(null)
 
-  function addMessage (message: string, emitter: 'bot' | 'user') {
+  async function addMessage (message: MessageType, emitter: 'bot' | 'user', data?: IntentData) {
+    let output: ReactNode = null
+    if (typeof message !== 'string') output = await message(data ?? {} as IntentData)
+
     setMessageHistory(prevMessages => (
       <>
         {prevMessages}
-        <Message emitter={emitter}>{message}</Message>
+        {typeof message === 'string' && <Message emitter={emitter}>{message}</Message>}
+        {output}
       </>
     ))
   }
 
   const executionAction = useCallback(async (intent: Intent, data: IntentData) => {
     if (typeof intent.action !== 'function') return
-    const message = await intent.action(data)
-    addMessage(message, 'bot')
+    await addMessage(intent.action, 'bot', data)
   }, [])
 
   const processEntity = useCallback(async (rawText: string): Promise<void> => {
@@ -43,7 +46,7 @@ export default function ChatbotProvider ({ children }: ChatbotProviderProps) {
     const { pattern, errorMessage, name } = entities.at(entityPosition) as Entity
     const data = { ...prevData, [name]: rawText }
 
-    if (failures >= 1) {
+    if (failures > 1) {
       setCurrent(null)
       addMessage('No completaste el proceso', 'bot')
       addMessage('Pero no te preocupes puedes regresar al menu.', 'bot')

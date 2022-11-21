@@ -1,37 +1,34 @@
+import { Message } from '@/components'
+import { getUsersService } from '@/services'
 import { Intent } from '@/types'
 
-const users = [
-  {
-    id: '1061800800',
-    name: 'Luis Martines',
-    bills: [
-      {
-        number: 893422,
-        date: '11/2022',
-        paymed: 'Pago NO registrado ❌'
-      }
-    ]
-  },
-  {
-    id: '1061800800',
-    name: 'Camila Lopez',
-    bills: [
-      {
-        number: 122456,
-        date: '10/2021',
-        paymed: 'Pago registrado ✅'
-      }
-    ]
-  }
-]
+async function getBillPayment ({ identificacion = '', fecha = '' }) {
+  const user = getUsersService(identificacion)
+  if (!user) return (<Message>Lo sentimos, no te encontramos registrado.</Message>)
 
-async function getBillPayment ({ identificacion = '', fecha = '' }): Promise<string> {
-  const user = users.find(({ id }) => id === identificacion)
-  if (!user) return 'Lo sentimos, no te encontramos registrado.'
   const bill = user.bills.find(({ date }) => date === fecha)
-  if (!bill) return `No encontramos una factura para la fecha ${fecha}.`
-  return `Excelente! Encontramos una factura para la fecha ${fecha} a nombre de ${user.name}
-  puedes descagar tu factura en el siguiente enlace https://bill.com/?id=${bill.number}`
+
+  if (!bill) {
+    return (
+      <Message>
+        No encontramos una factura para la fecha <strong>{fecha}</strong>.
+      </Message>
+    )
+  }
+
+  const { name } = user
+  const { paymed, number } = bill
+
+  const downloadLink = `https://bill.com/?id=${number}`
+  const testBillPaymed = 'https://templates.invoicehome.com/modelo-factura-es-puro-750px.png'
+
+  return (
+    <Message>
+      <p><strong>{name}</strong> encontramos una factura 👌.</p>
+      <p>Tu factura para la fecha {fecha} y tiene {paymed}.</p>
+      <p>accede a <a href={testBillPaymed} target='_blank' rel="noopener noreferrer">{downloadLink}</a></p>
+    </Message>
+  )
 }
 
 export const bill: Intent = {

@@ -1,6 +1,9 @@
+import { ReactNode } from 'react'
 
 export type IntentData = { [key: string]: any }
-export type ActionFunction = (data: IntentData) => Promise<string>
+export type ActionFunction = (data: IntentData) => Promise<string | ReactNode>
+export type CustomMessage = () => Promise<ReactNode>
+export type MessageType = string | CustomMessage | ActionFunction
 
 export interface Entity {
   name: string
@@ -12,7 +15,7 @@ export interface Entity {
 export interface Intent {
   name: string
   pattern: RegExp
-  message: string
+  message: string | CustomMessage
   quickReplies?: Array<string>
   entities?: Array<Entity>
   trigger?: string
