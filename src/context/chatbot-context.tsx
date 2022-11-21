@@ -2,6 +2,7 @@ import { createContext, ReactNode, useCallback, useState } from 'react'
 import { CurrentIntent, Entity, Intent, IntentData, MessageType } from '@/types'
 import { matchPattern, searchIntentByName } from '@/helpers'
 import { Message } from '@/components'
+import { tryAgain } from '@/intents/try-again'
 
 interface ChatbotContextInterface {
   messageHistory: ReactNode
@@ -46,20 +47,21 @@ export default function ChatbotProvider ({ children }: ChatbotProviderProps) {
     const { pattern, errorMessage, name } = entities.at(entityPosition) as Entity
     const data = { ...prevData, [name]: rawText }
 
-    if (failures > 1) {
+    if (!pattern.test(rawText)) {
+      const increaseNumberFailures = failures + 1
+
+      if (increaseNumberFailures <= 2) {
+        setCurrent({ ...current as CurrentIntent, failures: increaseNumberFailures })
+        addMessage(errorMessage, 'bot')
+        return
+      }
+
       setCurrent(null)
-      addMessage('No completaste el proceso', 'bot')
-      addMessage('Pero no te preocupes puedes regresar al menu.', 'bot')
+      addMessage(tryAgain.message, 'bot')
       setListReplies(['Ir al menu'])
       return
     }
 
-    if (!pattern.test(rawText)) {
-      const increaseNumberFailures = failures + 1
-      setCurrent({ ...current as CurrentIntent, failures: increaseNumberFailures })
-      addMessage(errorMessage, 'bot')
-      return
-    }
     if (nextPosition >= entities.length) {
       setCurrent(null)
       await executionAction(intent, data)
@@ -68,7 +70,7 @@ export default function ChatbotProvider ({ children }: ChatbotProviderProps) {
 
     const nextEntity = entities.at(nextPosition) as Entity
     addMessage(nextEntity.message, 'bot')
-    setCurrent({ intent, entity: nextPosition, data, failures })
+    setCurrent({ intent, entity: nextPosition, data, failures: 0 })
   }, [current, executionAction])
 
   const proccesIntent = useCallback((intent: Intent) : void => {
