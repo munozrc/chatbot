@@ -1,9 +1,9 @@
-import { gretting, showMenu } from './greeting'
+import { greeting, showMenu } from './greeting'
 import { Intent } from '@/types'
 import { bill } from './bill'
 
 const allIntents: Array<Intent> = [
-  gretting,
+  greeting,
   showMenu,
   bill
 ]

@@ -1,6 +1,6 @@
 import { Intent } from '@/types'
 
-export const gretting: Intent = {
+export const greeting: Intent = {
   name: 'greeting',
   pattern: /hola|buen(\s|[oa]s*)*(dia|noche|tarde)s*|que\s*tal/i,
   message: '¡Hola! Encantado de conocerte.',
