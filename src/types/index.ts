@@ -1,12 +1,13 @@
+
+export type IntentData = { [key: string]: any }
+export type ActionFunction = (data: IntentData) => Promise<string>
+
 export interface Entity {
   name: string
   pattern: RegExp
   message: string
   errorMessage: string
 }
-
-export type IntentData = { [key: string]: any }
-export type ActionFunction = (data: IntentData) => Promise<string>
 
 export interface Intent {
   name: string
