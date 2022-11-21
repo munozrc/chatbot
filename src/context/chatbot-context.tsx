@@ -36,15 +36,27 @@ export default function ChatbotProvider ({ children }: ChatbotProviderProps) {
   }, [])
 
   const processEntity = useCallback(async (rawText: string): Promise<void> => {
-    const { intent, entity: entityPosition, data: prevData } = current as CurrentIntent
+    const { intent, entity: entityPosition, data: prevData, failures } = current as CurrentIntent
     const entities = intent.entities as Entity[]
     const nextPosition = entityPosition + 1
 
     const { pattern, errorMessage, name } = entities.at(entityPosition) as Entity
     const data = { ...prevData, [name]: rawText }
 
-    if (!pattern.test(rawText)) return addMessage(errorMessage, 'bot')
+    if (failures >= 1) {
+      setCurrent(null)
+      addMessage('No completaste el proceso', 'bot')
+      addMessage('Pero no te preocupes puedes regresar al menu.', 'bot')
+      setListReplies(['Ir al menu'])
+      return
+    }
 
+    if (!pattern.test(rawText)) {
+      const increaseNumberFailures = failures + 1
+      setCurrent({ ...current as CurrentIntent, failures: increaseNumberFailures })
+      addMessage(errorMessage, 'bot')
+      return
+    }
     if (nextPosition >= entities.length) {
       setCurrent(null)
       await executionAction(intent, data)
@@ -53,7 +65,7 @@ export default function ChatbotProvider ({ children }: ChatbotProviderProps) {
 
     const nextEntity = entities.at(nextPosition) as Entity
     addMessage(nextEntity.message, 'bot')
-    setCurrent({ intent, entity: nextPosition, data })
+    setCurrent({ intent, entity: nextPosition, data, failures })
   }, [current, executionAction])
 
   const proccesIntent = useCallback((intent: Intent) : void => {
@@ -65,7 +77,7 @@ export default function ChatbotProvider ({ children }: ChatbotProviderProps) {
     if (!entities) return
 
     const firstEntity = entities[0]
-    setCurrent({ data: {}, entity: 0, intent })
+    setCurrent({ data: {}, entity: 0, intent, failures: 0 })
     addMessage(firstEntity.message, 'bot')
   }, [])
 

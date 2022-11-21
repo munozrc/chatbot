@@ -22,4 +22,5 @@ export interface CurrentIntent {
   intent: Intent
   data: IntentData
   entity: number
+  failures: number
 }
