@@ -1,12 +1,16 @@
 import ChatbotProvider from './context/chatbot-context'
-import ChatBot from './chatbot'
+import Chatbot from './chatbot'
+
+import styles from './styles/app.module.css'
 
 export default function App () {
   return (
     <main>
-      <ChatbotProvider>
-        <ChatBot />
-      </ChatbotProvider>
+      <div className={styles.wrapperChatbot}>
+        <ChatbotProvider>
+          <Chatbot />
+        </ChatbotProvider>
+      </div>
     </main>
   )
 }

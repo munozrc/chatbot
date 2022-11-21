@@ -4,14 +4,14 @@ import { ChatbotContext } from './context/chatbot-context'
 
 import styles from './styles/chatbot.module.css'
 
-export default function ChatBot () {
+export default function Chatbot () {
   const { messageHistory, listReplies, processNewMessage } = useContext(ChatbotContext)
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.shadeWrapper}>
         <div className={styles.container}>
-          <ChatHeader agentName='ChatBot' />
+          <ChatHeader agentName='Chatbot' />
           <MessageList
             listReplies={listReplies}
             messageHistory={messageHistory}
